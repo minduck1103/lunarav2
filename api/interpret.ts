@@ -1,3 +1,3 @@
-import { createInterpretHandler } from "../server/interpret";
+import { createInterpretHandler } from "../server/interpret.js";
 
 export default { fetch: createInterpretHandler() };

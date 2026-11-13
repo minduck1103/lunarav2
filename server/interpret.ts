@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { setTimeout as delay } from "node:timers/promises";
-import { interpretationSchema, parseInterpretation, readingRequestSchema } from "../src/data/interpretation";
-import { buildSystemInstruction } from "./rules";
+import { interpretationSchema, parseInterpretation, readingRequestSchema } from "../src/data/interpretation.js";
+import { buildSystemInstruction } from "./rules.js";
 
 const maxBodyBytes = 4096;
 const upstreamSchema = z.object({

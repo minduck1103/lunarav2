@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { tarotDeck } from "../src/data/tarotDeck";
-import { rulesVersion, type ReadingRequest } from "../src/data/interpretation";
+import { tarotDeck } from "../src/data/tarotDeck.js";
+import { rulesVersion, type ReadingRequest } from "../src/data/interpretation.js";
 
 export function parseRules(source: string) {
   const partA = source.indexOf("# PHẦN A");
