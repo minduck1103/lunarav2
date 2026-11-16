@@ -61,6 +61,15 @@ button.chip:hover, .chip.selected { border-color: var(--gold-soft); background: 
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 22px; font-weight: 700; letter-spacing: .22em; color: var(--gold-bright); }
 .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--gold-soft); border-radius: 50%; font-size: 18px; box-shadow: 0 0 16px rgba(217, 184, 113, .25); }
 .topbar-actions { display: flex; align-items: center; gap: 12px; }
+.sound-toggle { gap: 6px; }
+.sound-control { display: flex; }
+.sound-message { position: absolute; top: calc(100% - 6px); right: 0; width: max-content; max-width: 100%; margin: 0; padding: 8px 12px; border: 1px solid var(--gold-soft); border-radius: 10px; background: #17132a; color: var(--muted); font-size: 12px; line-height: 1.5; box-shadow: 0 6px 24px #0005; }
+@media (max-width: 480px) {
+  .topbar-actions { gap: 6px; }
+  .topbar .brand { gap: 6px; font-size: 17px; letter-spacing: .12em; }
+  .topbar .brand-mark { width: 26px; height: 26px; }
+  .topbar .button.small { padding: 0 10px; font-size: 12px; }
+}
 
 /* Hero */
 .hero { position: relative; margin-top: -68px; padding-top: 68px; background-position: center 25%; background-size: cover; isolation: isolate; }

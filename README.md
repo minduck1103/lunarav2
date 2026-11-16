@@ -12,6 +12,7 @@ MVP web app Tarot bằng tiếng Việt, responsive ưu tiên mobile. Giao diệ
 ## Công nghệ
 
 - React, TypeScript, Vite.
+- Howler cho sound effect tùy chọn, mặc định tắt; bộ sound tải về project có giấy phép CC0. Nguồn và hành vi xem [tài liệu âm thanh](docs/sound-assets.md).
 - Không cần database, tài khoản hoặc cấu hình Supabase.
 - Rút bài ngay trong trình duyệt bằng Web Crypto, không lặp lá trong cùng phiên.
 - Kết quả chỉ tồn tại trong bộ nhớ: tải lại trang hoặc trải bài mới sẽ mất kết quả cũ. Không lưu câu hỏi/kết quả vào localStorage hoặc database.
@@ -21,6 +22,8 @@ MVP web app Tarot bằng tiếng Việt, responsive ưu tiên mobile. Giao diệ
 - Không có nhãn “AI”, nghĩa tham khảo hoặc checkbox trong luồng. Footer có **Quyền riêng tư** giải thích nội dung tạo tự động, dữ liệu gửi đến Gemini và chính sách free tier.
 
 ## Chạy giao diện
+
+Chạy các lệnh bên dưới tại thư mục gốc project (thư mục chứa `package.json`), không phải trong `docs/`.
 
 Yêu cầu Node.js 20.19+ hoặc 22.12+.
 
@@ -55,21 +58,25 @@ Mỗi lá trong 78 lá được gán một skin tướng LMHT, ưu tiên dòng s
 
 ## Cấu trúc source
 
-- [`src/App.tsx`](src/App.tsx): giao diện, luồng đọc bài và tải PNG.
-- [`src/styles.css`](src/styles.css): typography, responsive và animation.
-- [`src/data/tarotDeck.ts`](src/data/tarotDeck.ts): dữ liệu 78 lá và logic rút bài.
-- [`src/data/cardArt.ts`](src/data/cardArt.ts): đường dẫn tài nguyên hình ảnh.
-- [`src/data/interpretation.ts`](src/data/interpretation.ts): hợp đồng request/response và kiểm tra kết quả.
-- [`api/interpret.ts`](api/interpret.ts): entry point Vercel Function.
-- [`server/`](server/): gọi Gemini và chọn kiến thức từ rule; không đóng gói vào frontend.
-- [`tests/interpret.test.ts`](tests/interpret.test.ts): kiểm thử endpoint, rule, schema, timeout và giới hạn yêu cầu.
-- [`tests/reading-flow.test.tsx`](tests/reading-flow.test.tsx): kiểm thử hộp thoại, xem đủ lá mới có kết luận, một lá, lỗi/retry và hủy request.
-- [`public/`](public/): ảnh dùng trực tiếp bởi app.
-- [`tools/fetch-card-art.mjs`](tools/fetch-card-art.mjs): công cụ tải/cập nhật ảnh.
-- [`docs/`](docs/): tài liệu yêu cầu và thiết kế tham khảo.
-- [`assets/`](assets/): sơ đồ thiết kế ban đầu, không phải tài nguyên chạy app.
+- [`src/app/App.tsx`](../src/app/App.tsx): ghép layout và các feature, điều phối preview/ủng hộ.
+- [`src/app/styles/global.css`](../src/app/styles/global.css): typography, responsive và animation, giữ nguyên giao diện.
+- [`src/features/`](../src/features/): `reading`, `card-library`, `export-reading`, `donation`; component và hook nằm cạnh chức năng.
+- [`src/domain/tarot/`](../src/domain/tarot/): dữ liệu 78 lá, kiểu, trải bài và thuật toán rút bài độc lập React/browser.
+- [`src/contracts/interpretation.ts`](../src/contracts/interpretation.ts): hợp đồng request/response dùng chung client/server.
+- [`src/services/interpretationClient.ts`](../src/services/interpretationClient.ts): gửi HTTP và xác thực response, nhận base URL và AbortSignal.
+- [`src/platform/`](../src/platform/): adapter Web Crypto và đường dẫn ảnh phụ thuộc Vite.
+- [`src/shared/ui/CardArt.tsx`](../src/shared/ui/CardArt.tsx): hiển thị ảnh dùng chung giữa các feature trên web.
+- [`api/interpret.ts`](../api/interpret.ts): entry point Vercel Function.
+- [`server/`](../server/): gọi Gemini và chọn kiến thức từ rule; không đóng gói vào frontend.
+- [`tests/interpret.test.ts`](../tests/interpret.test.ts): kiểm thử endpoint, rule, schema, timeout và giới hạn yêu cầu.
+- [`src/features/reading/reading-flow.test.tsx`](../src/features/reading/reading-flow.test.tsx): kiểm thử flow, hộp thoại, thư viện, PNG/ủng hộ, lỗi/retry và hủy request.
+- [`src/domain/tarot/drawCards.test.ts`](../src/domain/tarot/drawCards.test.ts): kiểm thử nguồn random được truyền vào và ranh giới chiều ngược.
+- [`public/`](../public/): ảnh dùng trực tiếp bởi app.
+- [`tools/fetch-card-art.mjs`](../tools/fetch-card-art.mjs): công cụ tải/cập nhật ảnh.
+- [`docs/`](./): toàn bộ tài liệu mô tả, hướng dẫn và rule; không chứa source code thực thi.
+- [`docs/assets/`](assets/): sơ đồ thiết kế ban đầu, không phải tài nguyên chạy app.
 
-Chi tiết: [03 — Cấu trúc project](docs/03-project-structure.md). Backend Supabase và migration không còn dùng đã được xóa.
+Chi tiết: [03 — Cấu trúc project](03-project-structure.md). Backend Supabase và migration không còn dùng đã được xóa.
 
 ## Deploy Vercel và cấu hình Gemini
 
@@ -104,19 +111,21 @@ npm run preview
 
 ## Tài liệu sản phẩm
 
-Các tài liệu [`docs/`](docs/) đã được cập nhật theo source hiện tại: React + Vercel Function, không database, đọc từng lá rồi kết luận, lưu PNG. Chỉ các sơ đồ PNG trong [`assets/`](assets/) còn là tài liệu lịch sử. Kotlin Multiplatform là Tương lai rộng, chưa triển khai.
+Toàn bộ tài liệu mô tả nằm trong [`docs/`](./), gồm README này, các tài liệu 01–11 và sơ đồ trong [`docs/assets/`](assets/). Source code, cấu hình và tài nguyên chạy app vẫn nằm ngoài docs. Rule là tài liệu văn bản được server đọc từ `docs/11-rule-tarot`; đường dẫn này được giữ nguyên.
+
+Các tài liệu đã được cập nhật theo source hiện tại: React + Vercel Function, không database, đọc từng lá rồi kết luận, lưu PNG. Chỉ các sơ đồ PNG còn là tài liệu lịch sử. Android/iOS chưa triển khai; hướng mở rộng xem [roadmap](09-roadmap-and-testing.md).
 
 | Tài liệu | Nội dung / trạng thái |
 |---|---|
-| [01 — Product overview](docs/01-product-overview.md) | Phạm vi MVP và giới hạn hiện tại |
-| [02 — Architecture](docs/02-architecture.md) | Kiến trúc React + Vercel Function |
-| [03 — Project structure](docs/03-project-structure.md) | Cấu trúc source và luồng dữ liệu hiện tại |
-| [04 — Tarot domain](docs/04-tarot-domain.md) | Quy tắc bộ bài và trải bài |
-| [05 — AI interpretation](docs/05-ai-interpretation.md) | Pipeline Gemini, rule, validation và giới hạn |
-| [06 — Database and API](docs/06-database-and-api.md) | Vị trí dữ liệu, hợp đồng POST /api/interpret và mã lỗi |
-| [07 — Frontend UX](docs/07-frontend-ux.md) | Hộp thoại giải nghĩa, kết luận, PNG và quyền riêng tư |
-| [08 — Security and operations](docs/08-security-and-operations.md) | Secrets, deploy, hạn mức và rủi ro còn lại |
-| [09 — Roadmap and testing](docs/09-roadmap-and-testing.md) | Test hiện có và việc cần làm trước public |
-| [10 — Decisions and open questions](docs/10-decisions-and-open-questions.md) | Quyết định đã chốt và câu hỏi còn mở |
-| [11 — Quy tắc Tarot](docs/11-rule-tarot) | Bộ quy tắc luận giải cho AI (`lunara-tarot-rules@1.0`): nguyên tắc, giới hạn an toàn, vị trí trải bài, định dạng JSON đầu ra và kho tri thức đầy đủ 78 lá theo ID |
+| [01 — Product overview](01-product-overview.md) | Phạm vi MVP và giới hạn hiện tại |
+| [02 — Architecture](02-architecture.md) | Kiến trúc React + Vercel Function |
+| [03 — Project structure](03-project-structure.md) | Cấu trúc source và luồng dữ liệu hiện tại |
+| [04 — Tarot domain](04-tarot-domain.md) | Quy tắc bộ bài và trải bài |
+| [05 — AI interpretation](05-ai-interpretation.md) | Pipeline Gemini, rule, validation và giới hạn |
+| [06 — Database and API](06-database-and-api.md) | Vị trí dữ liệu, hợp đồng POST /api/interpret và mã lỗi |
+| [07 — Frontend UX](07-frontend-ux.md) | Hộp thoại giải nghĩa, kết luận, PNG và quyền riêng tư |
+| [08 — Security and operations](08-security-and-operations.md) | Secrets, deploy, hạn mức và rủi ro còn lại |
+| [09 — Roadmap and testing](09-roadmap-and-testing.md) | Test hiện có và việc cần làm trước public |
+| [10 — Decisions and open questions](10-decisions-and-open-questions.md) | Quyết định đã chốt và câu hỏi còn mở |
+| [11 — Quy tắc Tarot](11-rule-tarot) | Bộ quy tắc luận giải cho AI (`lunara-tarot-rules@1.0`): nguyên tắc, giới hạn an toàn, vị trí trải bài, định dạng JSON đầu ra và kho tri thức đầy đủ 78 lá theo ID |
 | [Sơ đồ](assets/README.md) | Sơ đồ tham khảo thiết kế ban đầu |

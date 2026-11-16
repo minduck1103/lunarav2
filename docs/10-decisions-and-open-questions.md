@@ -6,6 +6,7 @@
 |---|---|
 | Lunara, tiếng Việt, mobile-first | Trải nghiệm ít chữ, dark purple/navy, gold, typography dễ đọc |
 | React + TypeScript + Vite | Source hiện tại; CSS thuần và React state |
+| Feature-first | App ghép feature; domain/contracts/API client tách khỏi DOM/Vite, adapter web riêng; chưa cần monorepo |
 | Không database/tài khoản/lịch sử | Mỗi phiên chỉ nằm trong bộ nhớ; người dùng lưu PNG |
 | Rút bài tại browser | Web Crypto, không trùng, 35% ngược; không server draw |
 | Một lá và ba lá | Ba lá: Quá khứ, Hiện tại, Tương lai; không tương lai cố định |
@@ -28,7 +29,7 @@ Thiết kế Ktor/Supabase/server draw/history trong bộ tài liệu cũ đã b
 4. Duyệt nghĩa bổ sung 78 lá và kiểm thử chất lượng/safety bằng provider thật.
 5. Gói Vercel và cơ chế rate limit toàn hệ thống khi có tải thực.
 6. Chính sách quyền riêng tư/pháp lý khi phục vụ người dùng thật.
-7. Có chọn KMP/Compose cho Android/iOS hay không; chưa tạo project mobile.
+7. Lịch triển khai Android/iOS và lựa chọn React Native + Expo cho dài hạn hoặc Capacitor để tái sử dụng UI web nhanh; chưa tạo project mobile.
 
 ## Không nằm trong scope hiện tại
 

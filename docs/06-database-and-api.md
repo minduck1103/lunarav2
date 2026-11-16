@@ -6,7 +6,7 @@ Không có Supabase/PostgreSQL, schema, migration, seed database, auth hay REST 
 
 | Dữ liệu | Vị trí |
 |---|---|
-| ID, tên và nghĩa ngắn 78 lá | `src/data/tarotDeck.ts` |
+| ID, tên và nghĩa ngắn 78 lá | `src/domain/tarot/cards.ts` |
 | Rule và nghĩa chi tiết cho Gemini | `docs/11-rule-tarot` |
 | Ảnh lá và nền | `public/cards/`, `public/splash/` |
 | Phiên, kết quả và bước đang xem | React state, mất khi refresh |
@@ -40,7 +40,7 @@ Endpoint cùng origin, `Content-Type: application/json`, body tối đa 4.096 by
 
 ## Response 200
 
-Schema đầy đủ nằm trong [interpretation.ts](../src/data/interpretation.ts), ví dụ JSON ở [rule A9/A11](11-rule-tarot).
+Schema đầy đủ nằm trong [interpretation.ts](../src/contracts/interpretation.ts), ví dụ JSON ở [rule A9/A11](11-rule-tarot).
 
 | Trường | Nội dung |
 |---|---|

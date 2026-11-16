@@ -7,7 +7,8 @@ Một `POST /api/interpret` gọi Gemini qua Vercel Function trong cùng project
 - Entry point: [api/interpret.ts](../api/interpret.ts).
 - Handler: [server/interpret.ts](../server/interpret.ts).
 - Prompt builder: [server/rules.ts](../server/rules.ts).
-- Schema chung: [src/data/interpretation.ts](../src/data/interpretation.ts).
+- Schema chung: [src/contracts/interpretation.ts](../src/contracts/interpretation.ts).
+- Client: [interpretationClient.ts](../src/services/interpretationClient.ts); deadline và hủy request trong [useInterpretation.ts](../src/features/reading/hooks/useInterpretation.ts).
 - Tri thức: [11-rule-tarot](11-rule-tarot), phiên bản `lunara-tarot-rules@1.0`.
 
 ## Pipeline
@@ -46,4 +47,4 @@ Kiểm tra bằng mã bao gồm schema, danh tính lá, giới hạn từ và m�
 - Gemini vẫn trả 503 sau retry: API trả HTTP 503, `PROVIDER_BUSY`, `Retry-After: 30` và thông báo dịch vụ quá tải/tạm thời không khả dụng, thay vì HTTP 502 chung.
 - Không ghi log key, câu hỏi, response hoặc prompt; chỉ ghi mã lỗi/status và số thứ tự lần gọi.
 
-Tên nút và trạng thái trên UI không nhắc thuật ngữ kỹ thuật. Thông báo xử lý tự động/Google Gemini nằm ở **Quyền riêng tư** trong footer. Cấu hình key mới và kiểm thử gọi thật sau deploy xem [README](../README.md#deploy-vercel-và-cấu-hình-gemini).
+Tên nút và trạng thái trên UI không nhắc thuật ngữ kỹ thuật. Thông báo xử lý tự động/Google Gemini nằm ở **Quyền riêng tư** trong footer. Cấu hình key mới và kiểm thử gọi thật sau deploy xem [README](README.md#deploy-vercel-và-cấu-hình-gemini).

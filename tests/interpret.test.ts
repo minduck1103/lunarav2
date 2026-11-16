@@ -7,7 +7,7 @@ import { createServer } from "vite";
 import viteConfig from "../vite.config";
 import { createInterpretHandler } from "../server/interpret";
 import { buildSystemInstruction, parseRules } from "../server/rules";
-import { parseInterpretation, readingRequestSchema, rulesVersion, type InterpretationResult, type ReadingRequest } from "../src/data/interpretation";
+import { parseInterpretation, readingRequestSchema, rulesVersion, type InterpretationResult, type ReadingRequest } from "../src/contracts/interpretation";
 
 const reading: ReadingRequest = {
   rulesVersion, topic: "general", question: "Mình cần chú ý gì?", spreadId: "one-card",

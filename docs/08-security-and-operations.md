@@ -38,7 +38,7 @@ Mục **Quyền riêng tư** ở footer giải thích xử lý tự động và 
 
 ## Deploy và giám sát
 
-1. Theo [README](../README.md#deploy-vercel-và-cấu-hình-gemini): preset Vite, `dist`, Node 22.x/24.x, key server mới, redeploy.
+1. Theo [README](README.md#deploy-vercel-và-cấu-hình-gemini): preset Vite, `dist`, Node 22.x/24.x, key server mới, redeploy.
 2. Chạy `npm test` và `npm run build`.
 3. Kiểm tra request thật từ domain production, model/quota, đóng gói rule, lỗi 429/503 và luồng tải PNG.
 4. Theo dõi status/latency/chi phí qua dashboard Vercel/Google; log ứng dụng hiện chỉ có mã lỗi và status, không có trace ID/health route riêng.

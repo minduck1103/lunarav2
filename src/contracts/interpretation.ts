@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { tarotDeck } from "./tarotDeck.js";
+import { tarotDeck } from "../domain/tarot/cards.js";
 
 export const rulesVersion = "lunara-tarot-rules@1.0";
 export const positionIds = {

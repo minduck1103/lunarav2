@@ -22,7 +22,7 @@ npm run build
 `npm test` chạy hai nhóm:
 
 1. [interpret.test.ts](../tests/interpret.test.ts), Node test + tsx: 78 ID, context chỉ chứa lá đã rút, request/response fidelity, hỗ trợ an toàn, method/Origin/body, thiếu key, cấu hình local và chặn tải file key, retry output/503 cùng ngân sách 3 lần, phục hồi và quá tải kéo dài, quota/auth không retry, hủy/backoff/timeout và giới hạn instance.
-2. [reading-flow.test.tsx](../tests/reading-flow.test.tsx), Vitest + jsdom: gọi khi bắt đầu, hộp thoại hiện đủ lá không flip, nội dung từng lá, kết luận chỉ sau khi xem đủ, đóng/mở lại, khối PNG, một lá, lỗi/retry, hủy request và response cũ.
+2. Test đồng vị trí trong `src`, Vitest + jsdom: [reading-flow.test.tsx](../src/features/reading/reading-flow.test.tsx) kiểm tra gọi khi bắt đầu, hộp thoại hiện đủ lá không flip, nội dung từng lá, kết luận chỉ sau khi xem đủ, đóng/mở lại, khối PNG/ủng hộ, một lá, lỗi/retry, hủy request và response cũ; tìm kiếm/lọc thư viện giữ nguyên khi trải bài mới. [drawCards.test.ts](../src/domain/tarot/drawCards.test.ts) kiểm tra nguồn random được truyền vào, không đổi bộ bài và ranh giới 35% chiều ngược.
 
 Provider trong test là giả lập, không dùng key thật hoặc tính phí. Build kiểm tra TypeScript cả frontend, server, test/config rồi chạy Vite.
 
@@ -53,7 +53,7 @@ Checklist là hướng dẫn kiểm tra lại mỗi lần phát hành, không ph
 
 ## Mở rộng sau, chưa triển khai
 
-- Android/iOS với KMP/Compose Multiplatform; cần xây lại UI/logic Kotlin và hợp đồng API dùng chung.
+- Android/iOS với React Native + Expo: domain/contracts/API client đã tách khỏi DOM/Vite để có thể đưa vào workspace packages; UI, ảnh, random và xuất/chia sẻ cần adapter native. Chưa tạo monorepo hoặc mobile app.
 - Tách kho tri thức thành JSON độc lập để chia sẻ dễ hơn, nếu chọn hướng mobile.
 - Spread 5/10 lá, hỏi tiếp, tối ưu ảnh hoặc giới hạn phân tán khi có nhu cầu thực tế.
 - Chỉ thêm tài khoản/database nếu chủ dự án muốn lịch sử/đồng bộ; không phải điều kiện chạy MVP.

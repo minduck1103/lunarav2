@@ -1,20 +1,4 @@
-export type Topic = "love" | "career" | "finance" | "general";
-export type SpreadId = "one-card" | "three-card";
-
-export type TarotCard = {
-  id: string;
-  name: string;
-  english: string;
-  cardNumber: string;
-  arcana: "major" | "minor";
-  suit: string | null;
-  symbol: string;
-  keywords: string[];
-  uprightKeywords: string[];
-  reversedKeywords: string[];
-  uprightMeaning: string;
-  reversedMeaning: string;
-};
+import type { TarotCard } from "./types.js";
 
 const majorCards: Array<[string, string, string, string, string, string]> = [
   ["the-fool", "Kẻ Khờ", "The Fool", "✦", "Khởi đầu, tự do, niềm tin", "Bốc đồng, do dự, thiếu chuẩn bị"],
@@ -117,54 +101,9 @@ export const tarotDeck: TarotCard[] = [
   ),
 ];
 
-export const topics: Array<{ id: Topic; label: string; english: string; symbol: string; description: string; suggestions: string[] }> = [
-  { id: "love", label: "Tình yêu", english: "Love", symbol: "♡", description: "Các mối quan hệ & kết nối", suggestions: ["Người ấy nghĩ gì về mình?", "Mối quan hệ này sẽ đi về đâu?", "Mình cần yêu thương bản thân thế nào?"] },
-  { id: "career", label: "Sự nghiệp", english: "Career", symbol: "✧", description: "Công việc & hướng đi", suggestions: ["Có nên đổi công việc không?", "Điều gì giúp mình thăng tiến?", "Dự án sắp tới sẽ ra sao?"] },
-  { id: "finance", label: "Tài chính", english: "Finance", symbol: "◇", description: "Nguồn lực & sự đủ đầy", suggestions: ["Tài chính tháng này thế nào?", "Mình nên chú ý gì khi chi tiêu?", "Có nên đầu tư lúc này?"] },
-  { id: "general", label: "Tổng quan", english: "General", symbol: "☼", description: "Điều bạn cần lắng nghe", suggestions: ["Thông điệp cho mình hôm nay?", "Mình cần buông bỏ điều gì?", "Năng lượng tuần này của mình?"] },
-];
-
-export const suitFilters: Array<{ id: string; label: string }> = [
-  { id: "all", label: "Tất cả" },
-  { id: "major", label: "Ẩn Chính" },
-  { id: "cups", label: "Cốc" },
-  { id: "pentacles", label: "Tiền" },
-  { id: "swords", label: "Kiếm" },
-  { id: "wands", label: "Gậy" },
-];
-
-export const spreads: Array<{ id: SpreadId; label: string; detail: string; positions: string[] }> = [
-  { id: "one-card", label: "Một lá", detail: "Thông điệp dành cho bạn", positions: ["Thông điệp"] },
-  { id: "three-card", label: "Ba lá", detail: "Quá khứ · Hiện tại · Tương lai", positions: ["Quá khứ", "Hiện tại", "Tương lai"] },
-];
-
 export function getCard(id: string): TarotCard {
   const card = tarotDeck.find((item) => item.id === id);
   if (!card) throw new Error(`Không tìm thấy lá bài: ${id}`);
   return card;
 }
 
-function randomBelow(limit: number): number {
-  const range = 2 ** 32;
-  const cutoff = range - (range % limit);
-  const value = new Uint32Array(1);
-  do {
-    crypto.getRandomValues(value);
-  } while (value[0] >= cutoff);
-  return value[0] % limit;
-}
-
-export function drawCards(spreadId: SpreadId): Array<{ card: TarotCard; isReversed: boolean; position: string }> {
-  const spread = spreads.find((item) => item.id === spreadId);
-  if (!spread) throw new Error("Kiểu trải bài không hợp lệ.");
-  const shuffled = [...tarotDeck];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = randomBelow(index + 1);
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
-  }
-  return spread.positions.map((position, index) => ({
-    card: shuffled[index],
-    isReversed: randomBelow(100) < 35,
-    position,
-  }));
-}

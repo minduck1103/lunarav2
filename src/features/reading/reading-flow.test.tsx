@@ -2,17 +2,32 @@ import assert from "node:assert/strict";
 import { webcrypto } from "node:crypto";
 import { afterEach, beforeEach, test, vi } from "vitest";
 import { act } from "react";
-import { readingRequestSchema, rulesVersion, type ReadingRequest } from "../src/data/interpretation";
+import { readingRequestSchema, rulesVersion, type ReadingRequest } from "../../contracts/interpretation";
+import type { SoundSettings } from "../../platform/audio.web";
 
 const { capture } = vi.hoisted(() => ({ capture: vi.fn() }));
 vi.mock("html2canvas", () => ({ default: capture }));
+vi.mock("../../platform/audio.web", () => ({
+  HowlerAudio: class {
+    constructor(private onChange: (settings: SoundSettings) => void) {}
+    setEnabled(enabled: boolean) { this.onChange({ enabled, loading: false, error: "" }); }
+    play = vi.fn();
+    stop = vi.fn();
+    stopEffects = vi.fn();
+    stopAll = vi.fn();
+    interact = vi.fn();
+    requestBackground = vi.fn();
+    resumeBackground = vi.fn();
+    dispose = vi.fn();
+  },
+}));
 
 Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", { value: true, configurable: true });
 Object.defineProperty(globalThis, "crypto", { value: webcrypto, configurable: true });
 Object.defineProperty(window, "matchMedia", { value: () => ({ matches: true }) });
 
 const { createRoot } = await import("react-dom/client");
-const { default: App } = await import("../src/App");
+const { default: App } = await import("../../app/App");
 const originalFetch = globalThis.fetch;
 let container: HTMLDivElement;
 let root: ReturnType<typeof createRoot>;
@@ -146,6 +161,30 @@ test("one-card spread requires viewing its card before the conclusion", async ()
   assert.equal(hasButton("Tải ảnh"), false);
 });
 
+test("the extracted library keeps search and filters across reading resets and closes previews with Escape", async () => {
+  await click("Ẩn Chính");
+  assert.equal(container.querySelectorAll(".deck-card").length, 22);
+  const search = container.querySelector<HTMLInputElement>('input[type="search"]');
+  const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+  assert.ok(search && setValue);
+  await act(async () => {
+    setValue.call(search, "The Star");
+    search.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  assert.equal(container.querySelectorAll(".deck-card").length, 1);
+  await click("Ngôi Sao");
+  assert.equal(dialog()?.getAttribute("aria-label"), "Ngôi Sao");
+  await act(async () => { window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" })); });
+  assert.equal(dialog(), null);
+  await draw(1);
+  await click("Trải bài mới");
+  assert.equal(search.value, "The Star");
+  assert.equal(container.querySelectorAll(".deck-card").length, 1);
+  await click("Tổng quan");
+  await click("Tiếp tục");
+  assert.equal(button("Một lá").getAttribute("aria-pressed"), "true");
+});
+
 test("failed requests show neutral errors and retry without fabricated meanings", async () => {
   await draw(3);
   const successFetch = globalThis.fetch;
@@ -183,6 +222,25 @@ test("starting over aborts pending requests and discards late results", async ()
   await act(async () => { finish(completed); });
   assert.equal(dialog(), null);
   assert.equal(document.body.querySelector(".reading-conclusion"), null);
+});
+
+test("resetting during shuffle discards the pending draw instead of dealing cards and sound later", async () => {
+  vi.spyOn(window, "matchMedia").mockImplementation((media) => ({
+    matches: false, media, onchange: null,
+    addListener: vi.fn(), removeListener: vi.fn(),
+    addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: () => true,
+  }));
+  await click("Tổng quan");
+  await click("Tiếp tục");
+  await click("Xáo & rút bài");
+  assert.ok(container.querySelector(".shuffle-stage"));
+  await act(async () => { container.querySelector<HTMLAnchorElement>(".topbar .brand")?.click(); });
+  await act(async () => { await new Promise((resolve) => setTimeout(resolve, 1450)); });
+  assert.equal(container.querySelector(".drawn-cards"), null);
+  assert.match(container.textContent ?? "", /Bạn muốn hỏi về điều gì/);
+  await click("Tổng quan");
+  await click("Tiếp tục");
+  assert.equal(button("Xáo & rút bài").disabled, false);
 });
 
 test("support responses open directly in the dialog and can be saved immediately", async () => {

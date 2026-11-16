@@ -20,15 +20,19 @@ flowchart LR
 
 | Thành phần | Công nghệ / vị trí | Trách nhiệm |
 |---|---|---|
-| UI | React state, `src/App.tsx` | Luồng chọn, rút, giải nghĩa từng lá, kết luận, thư viện |
-| Style / chuyển động | CSS thuần, `src/styles.css` | Responsive, shuffle, deal, flip, glow, reduced motion |
-| Domain | `src/data/tarotDeck.ts` | ID, tên, từ khóa, chủ đề, trải bài, rút ngẫu nhiên |
-| Hợp đồng | Zod, `src/data/interpretation.ts` | Request/response, kiểm tra ID/vị trí/chiều và độ dài |
+| App / UI | `src/app/App.tsx`, `src/features/` | Ghép layout; feature sở hữu component/hook đọc bài, thư viện, xuất ảnh và ủng hộ |
+| State đọc bài | `src/features/reading/reading.reducer.ts` | Bước, lựa chọn, lượt lật, lỗi và điều kiện xuất; không phụ thuộc DOM |
+| Style / chuyển động | CSS thuần, `src/app/styles/global.css` | Responsive, shuffle, deal, flip, glow, reduced motion |
+| Domain | `src/domain/tarot/` | ID, tên, từ khóa, trải bài, thuật toán rút với nguồn random được truyền vào |
+| Adapter web | `src/platform/` | Web Crypto và đường dẫn tài nguyên theo base URL của Vite |
+| Âm thanh | Howler, `src/platform/audio.web.ts`, `src/features/sound-settings/` | Nhạc nền/sound action từ public, mặc định bật mỗi phiên, mute/preload/lịch; không ảnh hưởng Gemini |
+| Hợp đồng | Zod, `src/contracts/interpretation.ts` | Request/response dùng chung frontend/server, kiểm tra ID/vị trí/chiều và độ dài |
+| Client API | `src/services/interpretationClient.ts` | HTTP, lỗi API và parse response; hook reading quản lý deadline/hủy request |
 | API | `api/interpret.ts`, `server/interpret.ts` | Kiểm tra đầu vào, quota cục bộ, gọi provider và xử lý lỗi |
 | Kho tri thức | `server/rules.ts`, `docs/11-rule-tarot` | Đọc rule, kiểm tra đủ 78 ID, chỉ chọn nghĩa các lá đã rút |
-| Xuất ảnh | html2canvas lazy import | Tạo PNG đầy đủ ở client |
+| Xuất ảnh | `src/features/export-reading/`, html2canvas lazy import | Tạo PNG đầy đủ ở client |
 | Local API | Middleware trong `vite.config.ts` | Chạy cùng handler khi `npm run dev` |
-| Kiểm thử | Node test + tsx; Vitest + jsdom | Endpoint/rule và tương tác UI |
+| Kiểm thử | Node test + tsx; Vitest + jsdom | Endpoint/rule, domain và tương tác UI |
 
 ## Ranh giới dữ liệu
 
@@ -43,6 +47,6 @@ flowchart LR
 
 Vercel phục vụ `dist/` và Function cùng origin. `vercel.json` đóng gói rule vào Function, đặt thời gian tối đa 60 giây. Server timeout 45 giây; client timeout 52 giây. Không rewrite `/api/interpret` về HTML.
 
-`npm run preview` chỉ là static preview, không chạy endpoint. Cấu hình và hạn mức xem [README](../README.md#deploy-vercel-và-cấu-hình-gemini) và [vận hành](08-security-and-operations.md).
+`npm run preview` chỉ là static preview, không chạy endpoint. Cấu hình và hạn mức xem [README](README.md#deploy-vercel-và-cấu-hình-gemini) và [vận hành](08-security-and-operations.md).
 
-Các PNG kiến trúc trong [assets](../assets/README.md) thuộc bản thiết kế cũ, không mô tả runtime hiện tại.
+Các PNG kiến trúc trong [assets](assets/README.md) thuộc bản thiết kế cũ, không mô tả runtime hiện tại.

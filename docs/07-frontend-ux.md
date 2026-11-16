@@ -2,13 +2,17 @@
 
 ## Stack và phong cách
 
-React state và CSS thuần; không Tailwind, Framer Motion, Zustand, TanStack Query hoặc router. Các component đang nằm trong [App.tsx](../src/App.tsx).
+React state/reducer và CSS thuần; không Tailwind, Framer Motion, Zustand, TanStack Query hoặc router. [App.tsx](../src/app/App.tsx) ghép các feature; component/hook nằm trong [features](../src/features/), CSS giữ tại [global.css](../src/app/styles/global.css). Cấu trúc chi tiết và ranh giới phụ thuộc xem [03](03-project-structure.md).
 
 - Nền xanh đen/tím đậm, accent gold, card glow nhẹ.
 - Inter cho text cơ bản; Cormorant Garamond cho tiêu đề và tên bài.
 - Shuffle, deal, flip bằng CSS; hỗ trợ `prefers-reduced-motion`.
 - Ảnh tĩnh theo ID, chỉ để trang trí, không tác động nghĩa Tarot.
 - Responsive mobile-first; ba lá luôn nằm ngang, thu theo chiều rộng.
+
+## Âm thanh
+
+Howler phát nhạc nền nguyên bản và sound CC0 đã lưu tại `public/sounds/` cho chọn, xáo, chia, lật, kết luận và PNG thành công. Âm thanh mặc định bật mỗi lần vào trang, thử autoplay hoặc chờ tương tác nếu browser chặn. Nút trên header chỉ có icon và chữ “Âm thanh”, không lưu lựa chọn bật/tắt. Thông báo tải/lỗi dạng overlay không làm dịch chuyển bố cục. Tắt sound/ẩn tab sẽ dừng toàn bộ playback; reset chỉ dừng effect, giữ nhạc nền. Lỗi audio không ngăn đọc bài. Xem [nguồn sound và hành vi](sound-assets.md).
 
 ## Luồng chính
 

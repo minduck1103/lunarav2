@@ -6,9 +6,9 @@ Theo Rider–Waite–Smith: 22 Ẩn chính (Strength VIII, Justice XI) và 56 �
 
 Nguồn dữ liệu:
 
-- [tarotDeck.ts](../src/data/tarotDeck.ts): `TarotCard`, ID, tên, từ khóa, nghĩa ngắn dùng trong danh mục.
+- [cards.ts](../src/domain/tarot/cards.ts): ID, tên, từ khóa, nghĩa ngắn dùng trong danh mục; kiểu `TarotCard` nằm trong [types.ts](../src/domain/tarot/types.ts).
 - [11-rule-tarot](11-rule-tarot): nghĩa riêng 78 lá, xuôi/ngược, theo chủ đề, lời khuyên và quy tắc cho provider.
-- [cardArt.ts](../src/data/cardArt.ts): đường dẫn ảnh theo ID. Ảnh trang trí không là nguồn tri thức luận giải.
+- [assets.web.ts](../src/platform/assets.web.ts): đường dẫn ảnh theo ID. Ảnh trang trí không là nguồn tri thức luận giải.
 
 Hai bộ nghĩa không giống nhau: nghĩa ngắn Ẩn phụ trong TypeScript vẫn được sinh từ khung số/chất; luận giải Gemini phải dùng nghĩa chi tiết trong rule. Không coi từ khóa ngắn là nội dung đã được provider tạo.
 
@@ -29,7 +29,7 @@ Tương lai là xu hướng có điều kiện, không phải tương lai cố �
 
 ## Ngẫu nhiên
 
-`drawCards` xáo bộ bài bằng Fisher–Yates với `crypto.getRandomValues`. Hàm `randomBelow` dùng rejection sampling tránh modulo bias. Lấy các lá đầu theo số vị trí; không trùng trong cùng trải bài. Mỗi lá có xác suất ngược 35%.
+[drawCards](../src/domain/tarot/drawCards.ts) xáo bộ bài bằng Fisher–Yates, nhận nguồn random qua tham số để không phụ thuộc browser. Hook web truyền [randomBelow](../src/platform/random.web.ts), dùng `crypto.getRandomValues` và rejection sampling tránh modulo bias. Lấy các lá đầu theo số vị trí; không trùng trong cùng trải bài. Mỗi lá có xác suất ngược 35%.
 
 Không dùng `Math.random()`; không gọi server để rút bài. Tải lại trang không tái lập reading trước.
 

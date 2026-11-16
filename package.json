@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
+    "howler": "^2.2.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "zod": "^4.1.0"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.12",
     "@types/node": "^22.0.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
